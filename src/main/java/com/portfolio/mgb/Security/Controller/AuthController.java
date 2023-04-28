@@ -75,7 +75,7 @@ public class AuthController {
             
     }  
     
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
         if(bindingResult.hasErrors())
             return new ResponseEntity(new Mensaje("Campos mal colocados"), HttpStatus.BAD_REQUEST);
