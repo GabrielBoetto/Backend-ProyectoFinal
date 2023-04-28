@@ -30,7 +30,7 @@ public class CEducacion {
     @Autowired
     SEducacion sEducacion;
     
-    @GetMapping("/lista")
+    @GetMapping("lista")
     public ResponseEntity<List<Educacion>> list(){
         List<Educacion> list = sEducacion.list();
         return new ResponseEntity(list, HttpStatus.OK);
