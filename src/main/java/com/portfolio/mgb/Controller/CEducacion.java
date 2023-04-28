@@ -40,7 +40,7 @@ public class CEducacion {
     public ResponseEntity<List<Educacion>> prueba(){
         List<Educacion> list = sEducacion.list();
         return new ResponseEntity(list, HttpStatus.OK);
-    }
+    } 
     
     @GetMapping("/detail/{id}")
     public ResponseEntity<Educacion> getById(@PathVariable("id")int id){
