@@ -1,7 +1,6 @@
  /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.portfolio.mgb.Security.Controller;
 
@@ -14,11 +13,12 @@ import com.portfolio.mgb.Security.Enums.RolNombre;
 import com.portfolio.mgb.Security.Service.RolService;
 import com.portfolio.mgb.Security.Service.UsuarioService;
 import com.portfolio.mgb.Security.jwt.JwtProvider;
+import jakarta.validation.Valid;
 import java.util.HashSet;
 import java.util.Set;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.OK;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,32 +51,34 @@ public class AuthController {
     @PostMapping("/nuevo")
     public ResponseEntity<?> nuevo(@Valid @RequestBody NuevoUsuario nuevoUsuario, BindingResult bindingResult){
         if(bindingResult.hasErrors())
-            return new ResponseEntity(new Mensaje("Campos mal puestos o email invalido"),HttpStatus.BAD_REQUEST);
-        
-        if(usuarioService.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
-            return new ResponseEntity(new Mensaje("Ese nombre de usuario ya existe"), HttpStatus.BAD_REQUEST);
-        
-        if(usuarioService.existsByEmail(nuevoUsuario.getEmail()))
-            return new ResponseEntity(new Mensaje("Ese email ya existe"), HttpStatus.BAD_REQUEST);
-        
-        Usuario usuario = new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),
+            return new ResponseEntity(new Mensaje("Campos mal puestos o email inválido"),HttpStatus.BAD_REQUEST);
+    
+    
+    if(usuarioService.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
+    return new ResponseEntity(new Mensaje("Ese nombre de usuario ya está en uso"), HttpStatus.BAD_REQUEST);
+
+    if(usuarioService.existsByEmail(nuevoUsuario.getEmail()))
+    return new ResponseEntity(new Mensaje("Ese email ya está en uso"), HttpStatus.BAD_REQUEST);
+    
+    Usuario usuario = new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),
             nuevoUsuario.getEmail(), passwordEncoder.encode(nuevoUsuario.getPassword()));
-        
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
-        
-        if(nuevoUsuario.getRoles().contains("admin"))
-            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
-        usuario.setRoles(roles);
-        usuarioService.save(usuario);
-        
-        return new ResponseEntity(new Mensaje("Usuario guardado"),HttpStatus.CREATED);
-    }
+    
+    Set<Rol> roles = new HashSet<>();
+    roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
+    
+    if(nuevoUsuario.getRoles().contains("admin"))
+        roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+    usuario.setRoles(roles);
+    usuarioService.save(usuario);
+    
+    return new ResponseEntity(new Mensaje("Usuario guardado"),HttpStatus.CREATED);
+            
+    }  
     
     @PostMapping("/login")
     public ResponseEntity<JwtDto> login(@Valid @RequestBody LoginUsuario loginUsuario, BindingResult bindingResult){
         if(bindingResult.hasErrors())
-            return new ResponseEntity(new Mensaje("Campos mal puestos"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("Campos mal colocados"), HttpStatus.BAD_REQUEST);
         
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
         loginUsuario.getNombreUsuario(), loginUsuario.getPassword()));
@@ -92,4 +94,5 @@ public class AuthController {
         return new ResponseEntity(jwtDto, HttpStatus.OK);
     }
     
-}
+            }
+    
