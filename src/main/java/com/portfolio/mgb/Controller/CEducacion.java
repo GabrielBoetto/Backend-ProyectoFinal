@@ -68,7 +68,7 @@ public class CEducacion {
             );
         sEducacion.save(educacion);
         return new ResponseEntity(new Mensaje("Educacion creada"), HttpStatus.OK);
-                
+                 
     }
     
     @PutMapping("/update/{id}")
